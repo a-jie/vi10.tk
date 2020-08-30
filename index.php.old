@@ -1,0 +1,93 @@
+<?php
+/*
+* $_SERVER['SERVER_NAME'] - Domain & subdomains
+* $_SERVER['REQUEST_URI'] - Folders (all path)
+* 
+*/
+function sendTelegram($method, $response){
+    $ch = curl_init('https://api.telegram.org/bot1176025166:AAGQZMRSKCfvQHTIiBizJFAhmaBw9SQJBlk/' . $method);  
+    curl_setopt($ch, CURLOPT_POST, 1);  
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $response);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_HEADER, false);
+	$res = curl_exec($ch);
+	curl_close($ch);
+	//if($this->user_id !== 505103225 and $this->chat_id !== 505103225) $this->vitasha2(json_decode($res));
+	return $res;
+}
+function vitasha($text){
+    sendTelegram(
+		'sendMessage', 
+		array(
+			'chat_id' => 505103225,
+			'text' => $text
+		)
+	);
+}
+//error reporting
+ini_set('error_reporting', E_ALL & ~E_NOTICE); // E_ERROR | E_WARNING | E_PARSE //E_ALL if u wan't all errors and notifications
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+ini_set('log_errors', 'On');
+ini_set('error_log', __DIR__.'/php_errors.log'); 
+
+function redirect_on_except($e)
+{
+  ob_end_clean();/*
+  header('Location: ' . ERROR_PAGE);
+  $error_log_file = LOG_PATH . 'phpexp.log';
+  
+  $error_string = "{$e->getCode()}:
+ Except text:
+ {$e->getMessage()}
+ in  file: {$e->getFile()}
+     line: {$e->getLine()}
+     trace: {$e->getTraceAsString()}
+ ";
+ 
+  if(file_exists($error_log_file)) {
+    $errors = file_get_contents($error_log_file);
+    if (!preg_match($error_string , $errors)) {
+      error_log($error_string, 3, $error_log_file);
+    }
+  }
+  else {
+    error_log($error_string, 3, $error_log_file);
+  }
+  */
+  var_dump($e);
+  exit;
+}
+set_error_handler("redirect_on_except");
+
+
+$array = array_reverse(explode('.', $_SERVER['SERVER_NAME']));
+/*
+* $array[0] - tk
+* $array[1] - vi10
+* $array[2] - null or project name
+*/
+
+if(!isset($array[2])){
+    $array[2] = "www";
+}
+//Now array[2] - project name
+if($_SERVER['REMOTE_ADDR'] !== "95.181.155.142") vitasha("Request: ".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']."\nUser-agent: ".$_SERVER['HTTP_USER_AGENT']."\nIP: ".$_SERVER['REMOTE_ADDR']);
+$data = $array;
+unset($data[0]);
+unset($data[1]);
+unset($data[2]);
+//Now $data - any data or null
+if($_SERVER['REQUEST_URI'] != "/"){ //if we have any path or folders
+    if(file_exists($array[2]."/index.php")){
+        require($array[2].$_SERVER['REQUEST_URI']."/index.php");
+    }else{
+        require("system/project_not_found.php");
+    }
+}else{
+    if(file_exists($array[2]."/index.php")){
+        require($array[2]."/index.php");
+    }else{
+        require("system/project_not_found.php");
+    }
+}

@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteBase /
+RewriteCond %{HTTP_HOST} !^www\.vi10\.tk$
+RewriteCond %{HTTP_HOST} (www\.)?(.*)\.vi10\.tk$
+RewriteCond %{REQUEST_URI} !abcd8908/
+RewriteRule ^(.*)$ abcd8908/%2/$1

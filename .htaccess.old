@@ -1,0 +1,116 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+RewriteRule ^ /(.*)$ %{HTTP_HOST}//$1 [R=permanent,L]
+
+
+
+
+
+
+
+
+RewriteEngine On
+
+
+RewriteRule ^market/ - [L]
+RewriteCond %{HTTP_HOST} ^market\.site\.ru$
+RewriteCond %{DOCUMENT_ROOT}/market%{REQUEST_URI} -d
+RewriteRule [^/]$ %{REQUEST_URI}/ [R,L]
+RewriteCond %{HTTP_HOST} ^market\.site\.ru$
+RewriteRule (.*) market/$1 [L,QSA]
+
+
+RewriteRule ^market/ - [L]
+RewriteCond %{HTTP_HOST} ^www\.market\.site\.ru$
+RewriteCond %{DOCUMENT_ROOT}/market%{REQUEST_URI} -d
+RewriteRule [^/]$ %{REQUEST_URI}/ [R,L]
+RewriteCond %{HTTP_HOST} ^www\.market\.site\.ru$
+RewriteRule (.*) market/$1 [L,QSA]
+
+
+
+
+Дано:
+Есть домен: domain.ru
+Есть поддомены subdomain.domain.ru и forum.domain.ru
+domain.ru сконфигурирован как хост и располагается в папке .../www/domain/
+Поддомены являются алиасами основного домена - т.е. приводят в туже самую папку .../www/domain/
+Идея: сделать так, чтобы субдомены ссылались на папки, внутри папки основного домена, т.е.
+subdomain.domain.ru -> .../www/domain/sd_subdomain/subdomain/
+forum.domain.ru -> .../www/domain/sd_subdomain/forum/
+Вот что надо прописать в .htaccess
+Options +FollowSymLinks -MultiViews
+
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{HTTP_HOST} !^www\.
+RewriteCond %{HTTP_HOST} (.*)\.domain\.ru
+RewriteCond $1 !^sd_
+RewriteRule (.*) /sd_subdomain/%1/$1 [L]
+
+Далее делаете алиасы и папки... для всех поддоменов это будет работать (ну почти для всех) ))
+
+
+
+
+
+
+
+
+
+*.domain.com должно брать файлы из /srv/www/vhosts/domain.com/*/
+при этом php должен обрабатывать apache по той же схеме.
+
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^([^\.]+)\.domain\.com
+#RewriteCond /srv/www/vhosts/domain\.com/%1 -d
+RewriteRule ^(.*) ^/$1/ [L]
+
+
+
+
+RewriteEngine On
+
+
+RewriteRule ^([^\.]+)/ - [L]
+RewriteCond %{HTTP_HOST} ^([^\.]+)\.vi10\.tk$
+RewriteCond %{DOCUMENT_ROOT}/$1%{REQUEST_URI} -d
+RewriteRule [^/]$ %{REQUEST_URI}/ [R,L]
+RewriteCond %{HTTP_HOST} ^$1\.vi10\.tk$
+RewriteRule (.*) d/$2 [L,QSA]
+
+
+
+
+
+
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^([^\.]+)\.domain\.com
+#RewriteCond /srv/www/vhosts/domain\.com/%1 -d
+RewriteRule ^(.*) ^/$1 [L]
+
+
+
+
+DJNN JKFJSLKFJALSDJAslkDJA:DK:ASJDKASJDLKASJDLKASJDLK
+RewriteEngine On
+
+RewriteRule ^(.*)/ - [L]
+RewriteCond %{HTTP_HOST} ^(.*)\.vi10\.tk$
+#RewriteCond %{DOCUMENT_ROOT}/d%{REQUEST_URI} -d
+#RewriteRule [^/]$ %{REQUEST_URI}/ [R,L]
+RewriteCond %{HTTP_HOST} ^(.*)\.vi10\.tk$
+RewriteRule (.*) %1/$1 [L,QSA]
+
+
+
+
+RewriteEngine on
+RewriteBase /
+RewriteCond %{HTTP_HOST} !^www\.vi10\.tk$
+RewriteCond %{HTTP_HOST} (www\.)?(.*)\.vi10\.tk$
+RewriteCond %{REQUEST_URI} !aajsdkajdka/
+RewriteRule ^(.*)$ aajsdkajdka/%2/$1
