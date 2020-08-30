@@ -20,7 +20,7 @@
             $.ajax({
                 async:false,
                 type: "POST",
-                url: "https://vi10.tk/s3/puts3.php",
+                url: "https://s3.vi10.tk/puts3.php",
                 dataType: 'text',
                 data: {put_key: $("#put_key").val(), put: $("#put_data").val()},
                 success: function(data){
@@ -31,7 +31,7 @@
             $.ajax({
                 async:false,
                 type: "POST",
-                url: "https://vi10.tk/s3/gets3.php",
+                url: "https://s3.vi10.tk/gets3.php",
                 dataType: 'text',
                 data: {get_key: $("#get_key").val()},
                 success: function(data){

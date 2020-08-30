@@ -115,12 +115,12 @@
         <span id="quote"></span>
         <button onclick="quote()">Next</button>
     </div>
-    <img id="slide1" src="https://vi10.tk/www/image3.webp" alt="">
+    <img id="slide1" src="https://vi10.tk/image3.webp" alt="">
     <script>
         async function quote(){
             $.ajax({
                 type: "GET",
-                url: "https://vi10.tk/quotes/quote.php",
+                url: "https://quotes.vi10.tk/quote.php",
                 dataType: 'text',
                 success: function(data){
                     $('#quote').empty();
